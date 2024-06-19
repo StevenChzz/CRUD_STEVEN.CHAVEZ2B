@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/btnIngresar"
+        android:layout_width="168dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="69dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="Ingresar"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtContrasena" />
+
+    <EditText
+        android:id="@+id/txtContrasena"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="59dp"
+        android:layout_marginEnd="59dp"
+        android:layout_marginBottom="45dp"
+        android:ems="10"
+        android:hint="Ingrese su contraseña"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/btnIngresar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtCorreo" />
+
+    <Button
+        android:id="@+id/btnCrearCuenta"
+        android:layout_width="175dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="90dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="Crear"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="16dp"
+        android:text="¿No tienes una cuenta?"
+        app:layout_constraintBottom_toTopOf="@+id/btnCrearCuenta"
+        app:layout_constraintStart_toStartOf="@+id/btnCrearCuenta"
+        app:layout_constraintTop_toBottomOf="@+id/btnIngresar" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="101dp"
+        android:layout_marginEnd="39dp"
+        android:layout_marginBottom="64dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="Inicio de sesión"
+        android:textSize="48sp"
+        app:layout_constraintBottom_toTopOf="@+id/txtCorreo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/txtCorreo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="59dp"
+        android:layout_marginEnd="59dp"
+        android:layout_marginBottom="49dp"
+        android:ems="10"
+        android:hint="Ingrese su correo electrónico"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/txtContrasena"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+</androidx.constraintlayout.widget.ConstraintLayout>
