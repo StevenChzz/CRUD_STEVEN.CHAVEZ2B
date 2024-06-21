@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
@@ -105,110 +106,104 @@ class Adaptador(var Datos: List<TbTickets>):  RecyclerView.Adapter<ViewHolder>()
             notifyDataSetChanged()
         }
 
-        fun actualicePantalla(uuid: String, newtitulo: String, newDescripcion: String, newAutor: String, newEmailContacto: String, newFechaCreacion: String, newEstado: String, newFechaFinalizacion: String){
+        fun actualicePantalla(uuid: String, newtitulo: String, newDescripcion: String, newAutor: String, newEmailContacto: String, newEstado: String, newFechaFinalizacion: String){
             val index = Datos.indexOfFirst { it.uuid == uuid }
             Datos[index].titulo = newtitulo
             Datos[index].descripcion = newDescripcion
             Datos[index].autor = newAutor
             Datos[index].emailContacto = newEmailContacto
-            Datos[index].fechaCreacion = newFechaCreacion
             Datos[index].estado = newEstado
             Datos[index].fechaFinalizacion = newFechaFinalizacion
 
             notifyDataSetChanged()
         }
 
-        fun actualizarDatos(newTitulo: String, newDescripcion: String, newAutor: String, newEmailContacto: String, newFechaCreacion: String, newEstado: String) {
-
-        }
-
-        fun actualizarDatos(newTitulo: String, newDescripcion: String, newAutor: String, newEmailContacto: String, newFechaCreacion: String, newEstado: String, newFechaFinalizacion: String, uuid: String){
+        fun actualizarDatos(newTitulo: String, newDescripcion: String, newAutor: String, newEmailContacto: String,  newEstado: String, newFechaFinalizacion: String, uuid: String) {
             GlobalScope.launch(Dispatchers.IO) {
                 val objConexion = ClaseConexion().cadenaConexion()
 
-                val updateTicket = objConexion?.prepareStatement("update tbTicket set titulo = ?, descripcion = ?, fechaCreacion = ?, estado = ?, fechaFinalizacion = ? where uuid = ?")!!
+                val updateTicket =
+                    objConexion?.prepareStatement("update tbTicket set titulo = ?, descripcion = ?, fechaCreacion = ?, estado = ?, fechaFinalizacion = ? where uuid = ?")!!
                 updateTicket.setString(1, newTitulo)
                 updateTicket.setString(2, newDescripcion)
                 updateTicket.setString(3, newAutor)
                 updateTicket.setString(4, newEmailContacto)
-                updateTicket.setString(5, newFechaCreacion)
-                updateTicket.setString(6, newEstado)
-                updateTicket.setString(7, newFechaFinalizacion)
-                updateTicket.setString(8, uuid)
+                updateTicket.setString(5, newEstado)
+                updateTicket.setString(6, newFechaFinalizacion)
+                updateTicket.setString(7, uuid)
 
                 updateTicket.executeUpdate()
-                withContext(Dispatchers.Main){
-                    actualicePantalla(uuid, newTitulo, newDescripcion, newAutor, newEmailContacto, newFechaCreacion, newEstado, newFechaFinalizacion)
+                withContext(Dispatchers.Main) {
+                    actualicePantalla(
+                        newTitulo,
+                        newDescripcion,
+                        newAutor,
+                        newEmailContacto,
+                        newEstado,
+                        newFechaFinalizacion,
+                        uuid
+                    )
 
                 }
-            }
-
-            holder.btnEditar.setOnClickListener{
-                //alert
-                val context = holder.itemView.context
-
-                val builder = AlertDialog.Builder(context)
-                builder.setTitle("Actualizar")
-                builder.setMessage("¿Quieres actualziar los datos?")
-
-                val cuadroTexto = EditText(context)
-
-                val txtNewTituloTicket = EditText(context).apply {
-                    setText(item.titulo)
-                }
-
-                val txtNewDescripcion = EditText(context).apply {
-                    setText(item.descripcion)
-                }
-
-                val txtNewAutor = EditText(context).apply {
-                    setText(item.autor)
-                }
-
-                val txtNewEmailContacto = EditText(context).apply {
-                    setText(item.emailContacto)
-                }
-
-                val txtNewFechaCreacion = EditText(context).apply {
-                    setText(item.fechaCreacion)
-                }
-
-                val txtNewEstadoTicket = EditText(context).apply {
-                    setText(item.estado)
-                }
-
-                val txtNewFechaFinalizacion = EditText(context).apply {
-                    setText(item.fechaFinalizacion)
-                }
-
-
-                val layout = LinearLayout(context).apply {
-                    orientation = LinearLayout.VERTICAL
-                    addView(txtNewTituloTicket)
-                    addView(txtNewDescripcion)
-                    addView(txtNewAutor)
-                    addView(txtNewEmailContacto)
-                    addView(txtNewFechaCreacion)
-                    addView(txtNewEstadoTicket)
-                    addView(txtNewFechaFinalizacion)
-
-                }
-                builder.setView(layout)
-
-
-                //botones
-                builder.setPositiveButton("Actualizar"){dialog, switch ->
-                    actualizarDatos(txtNewTituloTicket.text.toString(), txtNewDescripcion.text.toString(), txtNewAutor.text.toString(), txtNewEmailContacto.text.toString(), txtNewFechaCreacion.text.toString(), txtNewEstadoTicket.text.toString(), txtNewFechaFinalizacion.text.toString(), item.uuid)}
-
-                builder.setNegativeButton("Cancelar"){dialog, switch -> dialog.dismiss()}
-
-                val dialog = builder.create()
-                dialog.show()
             }
         }
 
+        holder.btnEditar.setOnClickListener {
+            val context = holder.itemView.context
+
+            val layout = LinearLayout(context)
+            layout.orientation = LinearLayout.VERTICAL
+
+            val txt1 = EditText(context)
+            layout.addView(txt1)
+            txt1.setText(ticket.titulo)
+            val txt2 = EditText(context)
+            layout.addView(txt2)
+            txt2.setText(ticket.descripcion)
+            val txt3 = EditText(context)
+            layout.addView(txt3)
+            txt3.setText(ticket.autor)
+            val txt4 = EditText(context)
+            layout.addView(txt4)
+            txt4.setText(ticket.emailContacto)
+            val txt5 = EditText(context)
+            txt5.setText(ticket.estado)
+            layout.addView(txt5)
+            val txt6 = EditText(context)
+            txt6.setText(ticket.fechaFinalizacion)
+            layout.addView(txt6)
+
+            val uuid = ticket.uuid
+
+            val builder = AlertDialog.Builder(context)
+            builder.setView(layout)
+            builder.setTitle("Editar Ticket")
 
 
+            builder.setPositiveButton("Aceptar") { dialog, which ->
+                actualizarDatos(
+                    txt1.text.toString(),
+                    txt2.text.toString(),
+                    txt3.text.toString(),
+                    txt4.text.toString(),
+                    txt5.text.toString(),
+                    txt6.text.toString(),
+                    uuid
+                )
+                Toast.makeText(context, "Ticket editado correctamente", Toast.LENGTH_SHORT).show()
 
+            }
+
+            builder.setNegativeButton("Cancelar") { dialog, which ->
+                dialog.dismiss()
+            }
+            val dialog = builder.create()
+            dialog.show()
+
+        }
     }
+
+
+
+
 }

@@ -6,6 +6,7 @@ import RecyclerViewHelpers.Adaptador
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -37,11 +38,11 @@ class MainActivity : AppCompatActivity() {
         val txtEstado = findViewById<EditText>(R.id.txtEstado)
         val txtFechaFinalizacion = findViewById<EditText>(R.id.txtFechaFinalizacion)
         val btnIngresarDatos = findViewById<Button>(R.id.btnIngresarDatos)
-        val rcvTickets =findViewById<RecyclerView>(R.id.rcvTickets)
+        val rcvTickets = findViewById<RecyclerView>(R.id.rcvTickets)
 
-        rcvTickets.layoutManager= LinearLayoutManager(this)
+        rcvTickets.layoutManager = LinearLayoutManager(this)
 
-        fun obtenerTickets():List<TbTickets> {
+        fun obtenerTickets(): List<TbTickets> {
 
             val objconexion = ClaseConexion().cadenaConexion()
 
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
             val listaTickets = mutableListOf<TbTickets>()
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 val uuid = resultSet.getString("uuid")
                 val titulo = resultSet.getString("titulo")
                 val description = resultSet.getString("descripcion")
@@ -60,10 +61,18 @@ class MainActivity : AppCompatActivity() {
                 val estado = resultSet.getString("estado")
                 val fechaFinalizacion = resultSet.getString("fechaFinalizacion")
 
-                val valoresJuntos = TbTickets(uuid, titulo, description, autor, emailContacto, fechaCreacion, estado, fechaFinalizacion)
+                val valoresJuntos = TbTickets(
+                    uuid,
+                    titulo,
+                    description,
+                    autor,
+                    emailContacto,
+                    fechaCreacion,
+                    estado,
+                    fechaFinalizacion
+                )
 
                 listaTickets.add(valoresJuntos)
-
 
 
             }
@@ -74,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             val ticketsDB = obtenerTickets()
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 val adapter = Adaptador(ticketsDB)
                 rcvTickets.adapter = adapter
             }
@@ -83,24 +92,30 @@ class MainActivity : AppCompatActivity() {
         btnIngresarDatos.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
                 val objConexion = ClaseConexion().cadenaConexion()
-                val addTicket= objConexion?.prepareStatement("insert into TbTickets (uuid, titulo, descripcion, autor, Emailcontacto, fechaCreacion, estado, fechaFinalizacion) values (?, ?, ?, ?, ?, ?, ?, ?)")!!
+                val addTicket =
+                    objConexion?.prepareStatement("insert into TbTickets (uuid, titulo, descripcion, autor, Emailcontacto, fechaCreacion, estado, fechaFinalizacion) values (?, ?, ?, ?, ?, ?, ?, ?)")!!
                 addTicket.setString(1, UUID.randomUUID().toString())
                 addTicket.setString(2, txtTitulo.text.toString())
                 addTicket.setString(3, txtDescripcion.text.toString())
                 addTicket.setString(4, txtAutor.text.toString())
-                addTicket.setString(5,txtEmailContacto.text.toString())
+                addTicket.setString(5, txtEmailContacto.text.toString())
                 addTicket.setString(6, txtFechaCreacion.text.toString())
-                addTicket.setString(7,txtEstado.text.toString())
+                addTicket.setString(7, txtEstado.text.toString())
                 addTicket.setString(8, txtFechaFinalizacion.text.toString())
                 addTicket.executeUpdate()
 
+                val ticket = obtenerTickets()
+                withContext(Dispatchers.Main) {
+                    (rcvTickets.adapter as? Adaptador)?.actualizarLista(ticket)
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Se agregó el ticket correctamente",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                }
             }
         }
-
-
-
-
-
 
 
     }
